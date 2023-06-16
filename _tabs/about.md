@@ -4,5 +4,4 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
+Dynamic engineering manager and tech lead with 9 years of experience and a history of driving growth and innovation in fast paced environments. Expertise in building and scaling teams, creating product roadmaps, and developing strategies in collaboration with stakeholders that accelerate business growth and success.
