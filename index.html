@@ -1,4 +1,580 @@
----
-layout: home
-# Index page
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Viresh Gehlawat — Staff Software Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080c10;
+      --surface: #0d1117;
+      --surface-2: #111820;
+      --border: rgba(255,255,255,0.07);
+      --border-bright: rgba(255,255,255,0.12);
+      --text: #e8edf2;
+      --text-muted: #7a8898;
+      --text-dim: #4a5568;
+      --accent: #c8d8e8;
+      --accent-glow: rgba(120,170,220,0.15);
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(ellipse at center, rgba(80,130,180,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px;
+      width: 100%;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1.4fr 0.8fr;
+      gap: 60px;
+      align-items: center;
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-weight: 400;
+    }
+
+    .hero-headline {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      line-height: 1.15;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .hero-headline span {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-body {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #8fa3b8;
+      max-width: 560px;
+      font-weight: 300;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 36px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+      padding: 12px 24px;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .btn-secondary {
+      border: 1px solid var(--border-bright);
+      color: var(--text);
+      padding: 12px 24px;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 400;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-secondary:hover { background: var(--surface-2); transform: translateY(-1px); }
+
+    /* Hero card */
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      backdrop-filter: blur(10px);
+    }
+
+    .card-row { margin-bottom: 24px; }
+    .card-row:last-child { margin-bottom: 0; }
+    .card-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .card-value {
+      font-size: 1.05rem;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+    .card-value.small {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: #8fa3b8;
+      line-height: 1.7;
+    }
+
+    /* ── SECTION WRAPPER ── */
+    section { padding: 80px 0; }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 48px;
+    }
+
+    /* ── HIGHLIGHTS ── */
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .highlight-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .highlight-card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-2px);
+    }
+    .highlight-card h3 {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-bottom: 12px;
+    }
+    .highlight-card p {
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: #7a8898;
+      font-weight: 300;
+    }
+
+    /* ── TWO-COL LAYOUT ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 24px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 36px;
+    }
+
+    /* Strengths */
+    .strength-list { list-style: none; margin-top: 24px; }
+    .strength-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #8fa3b8;
+      font-weight: 300;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .strength-item::before {
+      content: '—';
+      color: var(--text-dim);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Experience */
+    .exp-list { margin-top: 24px; }
+    .exp-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .exp-item:hover { border-color: var(--border-bright); }
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+    .exp-company {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 400;
+    }
+    .exp-period {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+    .exp-role {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      font-weight: 400;
+    }
+    .exp-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .exp-bullets li {
+      font-size: 0.85rem;
+      line-height: 1.65;
+      color: #6a7e90;
+      padding-left: 16px;
+      position: relative;
+      font-weight: 300;
+    }
+    .exp-bullets li::before {
+      content: '·';
+      position: absolute;
+      left: 4px;
+      color: var(--text-dim);
+    }
+
+    /* ── CONTACT ── */
+    .contact-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 64px 48px;
+      text-align: center;
+    }
+    .contact-wrap .section-title { margin-bottom: 16px; }
+    .contact-body {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #7a8898;
+      max-width: 560px;
+      margin: 0 auto 36px;
+      font-weight: 300;
+    }
+    .contact-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.7s ease forwards;
+    }
+    .fade-up:nth-child(1) { animation-delay: 0.05s; }
+    .fade-up:nth-child(2) { animation-delay: 0.15s; }
+    .fade-up:nth-child(3) { animation-delay: 0.25s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; padding: 80px 0; }
+      .highlights-grid { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .container { padding: 0 24px; }
+      .contact-wrap { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="container">
+      <div class="hero-inner">
+        <div>
+          <p class="hero-eyebrow fade-up">Viresh Gehlawat</p>
+          <h1 class="hero-headline fade-up">
+            Backend and<br>
+            <span>distributed systems</span><br>
+            engineer.
+          </h1>
+          <p class="hero-body fade-up">
+            I build revenue-critical, correctness-sensitive systems across fintech, commerce, and large-scale platforms. My work spans Robinhood, Navan, Bolt, Uber, and Flipkart — with a focus on financial decision systems, transaction infrastructure, and products used by millions.
+          </p>
+          <div class="hero-actions fade-up">
+            <a href="mailto:gehlawat.viresh@gmail.com" class="btn-primary">Contact</a>
+            <a href="https://www.linkedin.com/in/vireshgehlawat/" target="_blank" rel="noreferrer" class="btn-secondary">LinkedIn</a>
+          </div>
+        </div>
+        <div class="hero-card fade-up">
+          <div class="card-row">
+            <p class="card-label">Current role</p>
+            <p class="card-value">Staff Software Engineer<br>at Robinhood</p>
+          </div>
+          <div class="card-row">
+            <p class="card-label">Focus areas</p>
+            <p class="card-value small">Portfolio correctness, distributed financial systems, transaction infrastructure, backend architecture, and engineering leadership.</p>
+          </div>
+          <div class="card-row">
+            <p class="card-label">Location</p>
+            <p class="card-value small">Seattle, Washington</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HIGHLIGHTS -->
+  <section>
+    <div class="container">
+      <p class="section-label reveal">Profile</p>
+      <h2 class="section-title reveal">What I work on</h2>
+      <div class="highlights-grid">
+        <div class="highlight-card reveal">
+          <h3>FinTech &amp; Distributed Systems</h3>
+          <p>Staff-level engineering leader with 11+ years building revenue-critical, correctness-sensitive backend systems across investing, payments, and commerce platforms.</p>
+        </div>
+        <div class="highlight-card reveal">
+          <h3>High-Impact Roles</h3>
+          <p>Experience spanning Robinhood, Navan, Bolt, Uber, and Flipkart, with leadership across portfolio correctness, expense policy systems, checkout, automation, and personalization infrastructure.</p>
+        </div>
+        <div class="highlight-card reveal">
+          <h3>Systems at Scale</h3>
+          <p>Led work that improved portfolio correctness by 95%+, reduced policy evaluation staleness from days to seconds, and drove multi-million-dollar business impact.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRENGTHS + EXPERIENCE -->
+  <section style="padding-top: 0;">
+    <div class="container">
+      <div class="two-col">
+
+        <div class="panel reveal">
+          <p class="section-label">Highlights</p>
+          <h2 class="section-title" style="margin-bottom: 0;">Selected strengths</h2>
+          <ul class="strength-list">
+            <li class="strength-item">Built large-scale financial and transactional systems used by millions of users.</li>
+            <li class="strength-item">Led mission-critical platform work spanning investing, checkout, expense policy, and support automation.</li>
+            <li class="strength-item">Experienced in Go, Python, Java, distributed systems, data stores, and high-scale backend architecture.</li>
+            <li class="strength-item">Graduate of IIT Guwahati in Computer Science and Engineering.</li>
+          </ul>
+        </div>
+
+        <div class="panel reveal">
+          <p class="section-label">Experience</p>
+          <h2 class="section-title" style="margin-bottom: 0;">Career trajectory</h2>
+          <div class="exp-list">
+
+            <div class="exp-item">
+              <div class="exp-header">
+                <span class="exp-company">Robinhood</span>
+                <span class="exp-period">Oct 2024 – Present</span>
+              </div>
+              <p class="exp-role">Staff Software Engineer</p>
+              <ul class="exp-bullets">
+                <li>Technical lead for Portfolio and Trading Tools supporting products used daily by millions of users.</li>
+                <li>Reduced portfolio inaccuracies by over 95% through correctness-focused architectural improvements.</li>
+                <li>Redesigned portfolio services to support new asset classes, reducing onboarding time by over 60%.</li>
+              </ul>
+            </div>
+
+            <div class="exp-item">
+              <div class="exp-header">
+                <span class="exp-company">Navan</span>
+                <span class="exp-period">Jul 2023 – Oct 2024</span>
+              </div>
+              <p class="exp-role">Staff Software Engineer</p>
+              <ul class="exp-bullets">
+                <li>Led Expense Policy systems across transaction evaluation, reimbursement, and reconciliation flows.</li>
+                <li>Reduced policy evaluation staleness from multiple days to seconds for global enterprise workflows.</li>
+                <li>Built customizable policy capabilities across 30+ currencies for international expansion.</li>
+              </ul>
+            </div>
+
+            <div class="exp-item">
+              <div class="exp-header">
+                <span class="exp-company">Bolt</span>
+                <span class="exp-period">Mar 2021 – Jul 2023</span>
+              </div>
+              <p class="exp-role">Tech Lead / Engineering Manager, Checkout</p>
+              <ul class="exp-bullets">
+                <li>Led the core checkout platform, Bolt's flagship revenue-generating product.</li>
+                <li>Led Remote Checkout, helping expand Bolt into embedded and headless commerce.</li>
+                <li>Later led the broader checkout engineering organization across performance, conversion, and retention.</li>
+              </ul>
+            </div>
+
+            <div class="exp-item">
+              <div class="exp-header">
+                <span class="exp-company">Uber</span>
+                <span class="exp-period">Apr 2016 – Feb 2021</span>
+              </div>
+              <p class="exp-role">Senior Software Engineer / Software Engineer II</p>
+              <ul class="exp-bullets">
+                <li>Built growth and onboarding systems across emerging international markets.</li>
+                <li>Designed customer support automation systems that increased tickets handled per hour by 90%+.</li>
+                <li>Recognized by Uber leadership for technical excellence and business impact.</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section>
+    <div class="container">
+      <div class="contact-wrap reveal">
+        <p class="section-label">Get in touch</p>
+        <h2 class="section-title">Interested in fintech infrastructure,<br>backend systems, or engineering leadership?</h2>
+        <p class="contact-body">I'm open to thoughtful conversations around distributed systems, financial infrastructure, and building reliable products at scale.</p>
+        <div class="contact-actions">
+          <a href="mailto:gehlawat.viresh@gmail.com" class="btn-primary">gehlawat.viresh@gmail.com</a>
+          <a href="https://www.linkedin.com/in/vireshgehlawat/" target="_blank" rel="noreferrer" class="btn-secondary">LinkedIn Profile</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Viresh Gehlawat</p>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
