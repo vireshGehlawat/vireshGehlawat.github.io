@@ -740,16 +740,17 @@ if (playedDate === today) {
   document.getElementById('already-played-msg').style.display = 'block';
   document.getElementById('prev-score').textContent = parseInt(prevScore).toLocaleString();
 }
-// ===== GLOBAL STATE =====
-// let currentRound = 0;
-let totalRounds = 5;
-let score = 0;
-let guesses = [];
-let guessMarker;
-let selectedLatLng = null;
+
+// // ===== GLOBAL STATE =====
+// // let currentRound = 0;
+// let totalRounds = 5;
+// let score = 0;
+// let guesses = [];
+// let guessMarker;
+// let selectedLatLng = null;
 
 // Example daily locations (pick 5 for today)
-const dailyLocations = LOCATIONS.slice(0, totalRounds);
+// const dailyLocations = LOCATIONS.slice(0, totalRounds);
 
 // ===== HELPER FUNCTIONS =====
 function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -782,143 +783,114 @@ function updateScoreDisplay() {
   document.getElementById('score-pill').textContent = `${score} pts`;
 }
 
-// ===== MAP INITIALIZATION =====
-function initMap() {
-  map = L.map('map', {
-    center: [20, 0],
-    zoom: 2,
-    worldCopyJump: true,
-    zoomControl: false
-  });
 
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '',
-    maxZoom: 18,
-  }).addTo(map);
+// // ===== ROUND CONTROL =====
+// function startRound() {
+//   if(currentRound >= totalRounds) return showFinalScreen();
 
-  map.on('click', function(e) {
-    selectedLatLng = e.latlng;
+//   const location = dailyLocations[currentRound];
+//   document.getElementById('location-name-display').textContent = location.name;
+//   document.getElementById('round-label').textContent = `Round ${currentRound + 1} of ${totalRounds}`;
+//   document.getElementById('confirm-btn').classList.remove('ready');
 
-    if(guessMarker) map.removeLayer(guessMarker);
-    guessMarker = L.circleMarker(selectedLatLng, {
-      radius: 10,
-      color: '#4fffb0',
-      fillColor: '#fff',
-      fillOpacity: 1,
-      weight: 3
-    }).addTo(map);
+//   selectedLatLng = null;
+//   if(guessMarker) map.removeLayer(guessMarker);
 
-    document.getElementById('confirm-btn').classList.add('ready');
-  });
-}
+//   // optional: update difficulty stars
+//   const stars = '★'.repeat(location.difficulty) + '☆'.repeat(5 - location.difficulty);
+//   document.getElementById('diff-stars').textContent = stars;
+// }
 
-// ===== ROUND CONTROL =====
-function startRound() {
-  if(currentRound >= totalRounds) return showFinalScreen();
+// document.getElementById('confirm-btn').addEventListener('click', () => {
+//   if(!selectedLatLng) return;
 
-  const location = dailyLocations[currentRound];
-  document.getElementById('location-name-display').textContent = location.name;
-  document.getElementById('round-label').textContent = `Round ${currentRound + 1} of ${totalRounds}`;
-  document.getElementById('confirm-btn').classList.remove('ready');
+//   const location = dailyLocations[currentRound];
+//   const distance = haversineDistance(selectedLatLng.lat, selectedLatLng.lng, location.lat, location.lng);
+//   const roundScore = getScoreForDistance(distance);
+//   score += roundScore;
 
-  selectedLatLng = null;
-  if(guessMarker) map.removeLayer(guessMarker);
+//   // show result overlay
+//   document.getElementById('result-distance').textContent = `${Math.round(distance)} km`;
+//   document.getElementById('result-score').textContent = `+${roundScore} pts`;
+//   document.getElementById('result-feedback').textContent = getFeedback(distance);
 
-  // optional: update difficulty stars
-  const stars = '★'.repeat(location.difficulty) + '☆'.repeat(5 - location.difficulty);
-  document.getElementById('diff-stars').textContent = stars;
-}
+//   // bucket label based on distance
+//   let bucket = distance < 10 ? "PERFECT" : distance < 50 ? "GREAT" : distance < 200 ? "GOOD" : distance < 1000 ? "OK" : "MISS";
+//   document.getElementById('result-bucket-label').textContent = bucket;
 
-document.getElementById('confirm-btn').addEventListener('click', () => {
-  if(!selectedLatLng) return;
+//   document.getElementById('result-overlay').classList.add('show');
 
-  const location = dailyLocations[currentRound];
-  const distance = haversineDistance(selectedLatLng.lat, selectedLatLng.lng, location.lat, location.lng);
-  const roundScore = getScoreForDistance(distance);
-  score += roundScore;
+//   // save guess for final screen and trivia
+//   guesses.push({ location, distance, score: roundScore });
+// });
 
-  // show result overlay
-  document.getElementById('result-distance').textContent = `${Math.round(distance)} km`;
-  document.getElementById('result-score').textContent = `+${roundScore} pts`;
-  document.getElementById('result-feedback').textContent = getFeedback(distance);
-
-  // bucket label based on distance
-  let bucket = distance < 10 ? "PERFECT" : distance < 50 ? "GREAT" : distance < 200 ? "GOOD" : distance < 1000 ? "OK" : "MISS";
-  document.getElementById('result-bucket-label').textContent = bucket;
-
-  document.getElementById('result-overlay').classList.add('show');
-
-  // save guess for final screen and trivia
-  guesses.push({ location, distance, score: roundScore });
-});
-
-document.getElementById('next-btn').addEventListener('click', () => {
-  document.getElementById('result-overlay').classList.remove('show');
-  currentRound++;
-  startRound();
-});
+// document.getElementById('next-btn').addEventListener('click', () => {
+//   document.getElementById('result-overlay').classList.remove('show');
+//   currentRound++;
+//   startRound();
+// });
 
 // ===== FINAL SCREEN =====
-function showFinalScreen() {
-  document.getElementById('game').classList.add('hidden');
-  document.getElementById('final').classList.remove('hidden');
+// function showFinalScreen() {
+//   document.getElementById('game').classList.add('hidden');
+//   document.getElementById('final').classList.remove('hidden');
 
-  document.getElementById('final-score-num').textContent = score;
+//   document.getElementById('final-score-num').textContent = score;
 
-  // emojis
-  const emojiRow = guesses.map(g => {
-    if(g.distance < 10) return '🏆';
-    if(g.distance < 50) return '🎯';
-    if(g.distance < 200) return '👍';
-    if(g.distance < 1000) return '🤔';
-    return '💀';
-  }).join('');
-  document.getElementById('emoji-row').textContent = emojiRow;
+//   // emojis
+//   const emojiRow = guesses.map(g => {
+//     if(g.distance < 10) return '🏆';
+//     if(g.distance < 50) return '🎯';
+//     if(g.distance < 200) return '👍';
+//     if(g.distance < 1000) return '🤔';
+//     return '💀';
+//   }).join('');
+//   document.getElementById('emoji-row').textContent = emojiRow;
 
-  // rounds breakdown
-  const breakdownEl = document.getElementById('rounds-breakdown');
-  breakdownEl.innerHTML = '';
-  guesses.forEach((g, i) => {
-    breakdownEl.innerHTML += `
-      <div class="round-row">
-        <div class="round-num">${i+1}</div>
-        <div class="round-name">${g.location.name}</div>
-        <div class="round-dist">${Math.round(g.distance)} km</div>
-        <div class="round-sc">${g.score} pts</div>
-      </div>`;
-  });
+//   // rounds breakdown
+//   const breakdownEl = document.getElementById('rounds-breakdown');
+//   breakdownEl.innerHTML = '';
+//   guesses.forEach((g, i) => {
+//     breakdownEl.innerHTML += `
+//       <div class="round-row">
+//         <div class="round-num">${i+1}</div>
+//         <div class="round-name">${g.location.name}</div>
+//         <div class="round-dist">${Math.round(g.distance)} km</div>
+//         <div class="round-sc">${g.score} pts</div>
+//       </div>`;
+//   });
 
   // trivia cards
-  const triviaEl = document.getElementById('trivia-cards');
-  triviaEl.innerHTML = '';
-  guesses.forEach(g => {
-    const triviaFacts = g.location.trivia.map(f => `<div class="trivia-fact">• ${f}</div>`).join('');
-    triviaEl.innerHTML += `
-      <div class="trivia-card">
-        <div class="trivia-loc">${g.location.name}</div>
-        ${triviaFacts}
-        <div class="trivia-highlight">${g.location.funFact}</div>
-      </div>`;
-  });
-}
+//   const triviaEl = document.getElementById('trivia-cards');
+//   triviaEl.innerHTML = '';
+//   guesses.forEach(g => {
+//     const triviaFacts = g.location.trivia.map(f => `<div class="trivia-fact">• ${f}</div>`).join('');
+//     triviaEl.innerHTML += `
+//       <div class="trivia-card">
+//         <div class="trivia-loc">${g.location.name}</div>
+//         ${triviaFacts}
+//         <div class="trivia-highlight">${g.location.funFact}</div>
+//       </div>`;
+//   });
+// }
 
 // ===== START BUTTON =====
-document.getElementById('start-btn').addEventListener('click', () => {
-  document.getElementById('splash').classList.add('hidden');
-  document.getElementById('game').classList.remove('hidden');
-  initMap();
-  startRound();
-});
+// document.getElementById('start-btn').addEventListener('click', () => {
+//   document.getElementById('splash').classList.add('hidden');
+//   document.getElementById('game').classList.remove('hidden');
+//   initMap();
+//   startRound();
+// });
 
 // ===== SHARE BUTTON =====
-document.getElementById('share-btn').addEventListener('click', () => {
-  const text = `I scored ${score} pts in Daily Geo! 🌍 Can you beat me?`;
-  navigator.clipboard.writeText(text).then(() => {
-    const toast = document.getElementById('copy-toast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 1500);
-  });
-});
+// document.getElementById('share-btn').addEventListener('click', () => {
+//   const text = `I scored ${score} pts in Daily Geo! 🌍 Can you beat me?`;
+//   navigator.clipboard.writeText(text).then(() => {
+//     const toast = document.getElementById('copy-toast');
+//     toast.classList.add('show');
+//     setTimeout(() => toast.classList.remove('show'), 1500);
+//   });
+// });
 
 // ===== PLAY AGAIN =====
 document.getElementById('play-again-btn').addEventListener('click', () => {
