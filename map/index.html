@@ -73,7 +73,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .diff-disp { font-size: .6rem; color: var(--yellow); letter-spacing: .08em; }
 
 /* Location pill */
-.loc-pill { position: absolute; top: 20%; left: 50%; transform: translate(-50%, calc(-50% - 80px)); z-index: 901; background: rgba(12,15,20,.88); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 60px; padding: .65rem 1.4rem; text-align: center; pointer-events: none; animation: pillIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+.loc-pill { position: absolute; top: 50%; left: 50%; transform: translate(-50%, calc(-50% - 80px)); z-index: 901; background: rgba(12,15,20,.88); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 60px; padding: .65rem 1.4rem; text-align: center; pointer-events: none; animation: pillIn .5s cubic-bezier(.34,1.56,.64,1) both; }
 @keyframes pillIn { from{opacity:0;transform:translate(-50%,calc(-50% - 55px)) scale(.85)} to{opacity:1;transform:translate(-50%,calc(-50% - 80px)) scale(1)} }
 .loc-label { font-size: .6rem; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; }
 .loc-name { font-family: var(--font-d); font-size: clamp(1.1rem,4vw,1.5rem); color: var(--text); line-height: 1.1; }
@@ -182,7 +182,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
   <p class="sub">A global geography challenge</p>
   <div class="rules">
     <div class="rule"><span>📍</span><span>Tap the satellite map to guess <strong>5 locations</strong></span></div>
-    <div class="rule"><span>🎯</span><span>Score up to <strong>5,000 pts</strong> per round</span></div>
+    <div class="rule"><span>🎯</span><span>Score scales with <strong>distance × difficulty</strong> — max 1,500 pts</span></div>
     <div class="rule"><span>🌐</span><span>Rounds 1–2 near you · 3–5 <strong>go global</strong></span></div>
     <div class="rule"><span>📅</span><span>New puzzle <strong>every day</strong></span></div>
   </div>
@@ -237,7 +237,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
     <div class="f-hero">
       <div class="f-label">Today's Score</div>
       <div class="f-score" id="f-score">0</div>
-      <div class="f-max">out of 25,000</div>
+      <div class="f-max">out of 1,500</div>
       <div class="f-emojis" id="f-emojis"></div>
     </div>
 
@@ -443,7 +443,12 @@ function haversine(a,b,c,d){
   const x=Math.sin(dA/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dB/2)**2;
   return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
 }
-const calcScore = dist => Math.max(0, Math.round(5000-dist));
+// Score = 100 × difficulty × (1 − dist/20000), min 0
+// Max per round = 100 × difficulty → overall max = 1,500
+const MAX_DIST = 20000;
+function calcScore(dist, difficulty){
+  return Math.round(Math.max(0, 100 * difficulty * (1 - dist / MAX_DIST)));
+}
 
 /* ════════════════════════════════════════
    SEEDED RNG
@@ -590,7 +595,7 @@ function confirmGuess(){
 
   const loc=rounds[roundIdx];
   const dist=haversine(guessLat,guessLng,loc.lat,loc.lng);
-  const pts=calcScore(dist);
+  const pts=calcScore(dist, loc.difficulty);
   totalPts+=pts;
   results.push({loc,dist,pts});
 
@@ -700,7 +705,7 @@ function showFinal(){
    SHARE
 ════════════════════════════════════════ */
 function doShare(){
-  const text=`Daily Geo 🌍\n${todayStr(false)}\nScore: ${totalPts.toLocaleString()} / 25,000\n\n${results.map(r=>getEmoji(r.dist)).join('')}\n\nviresh.xyz/maps`;
+  const text=`Daily Geo 🌍\n${todayStr(false)}\nScore: ${totalPts.toLocaleString()} / 1,500\n\n${results.map(r=>getEmoji(r.dist)).join('')}\n\nviresh.xyz/maps`;
   if(navigator.share) navigator.share({text}).catch(()=>{});
   else navigator.clipboard.writeText(text).then(()=>showToast('Copied!')).catch(()=>showToast('Copy failed'));
 }
