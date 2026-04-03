@@ -73,7 +73,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg);
 .diff-disp { font-size: .6rem; color: var(--yellow); letter-spacing: .08em; }
 
 /* Location pill */
-.loc-pill { position: absolute; top: 50%; left: 50%; transform: translate(-50%, calc(-50% - 80px)); z-index: 901; background: rgba(12,15,20,.88); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 60px; padding: .65rem 1.4rem; text-align: center; pointer-events: none; animation: pillIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+.loc-pill { position: absolute; top: 20%; left: 50%; transform: translate(-50%, calc(-50% - 80px)); z-index: 901; background: rgba(12,15,20,.88); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 60px; padding: .65rem 1.4rem; text-align: center; pointer-events: none; animation: pillIn .5s cubic-bezier(.34,1.56,.64,1) both; }
 @keyframes pillIn { from{opacity:0;transform:translate(-50%,calc(-50% - 55px)) scale(.85)} to{opacity:1;transform:translate(-50%,calc(-50% - 80px)) scale(1)} }
 .loc-label { font-size: .6rem; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; }
 .loc-name { font-family: var(--font-d); font-size: clamp(1.1rem,4vw,1.5rem); color: var(--text); line-height: 1.1; }
