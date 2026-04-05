@@ -705,7 +705,7 @@ function showFinal(){
    SHARE
 ════════════════════════════════════════ */
 function doShare(){
-  const text=`Daily Geo 🌍\n${todayStr(false)}\nScore: ${totalPts.toLocaleString()} / 1,500\n\n${results.map(r=>getEmoji(r.dist)).join('')}\n\nviresh.xyz/maps`;
+  const text=`Daily Geo 🌍\n${todayStr(false)}\nScore: ${totalPts.toLocaleString()} / 1,500\n\n${results.map(r=>getEmoji(r.dist)).join('')}\n\nviresh.xyz/map`;
   if(navigator.share) navigator.share({text}).catch(()=>{});
   else navigator.clipboard.writeText(text).then(()=>showToast('Copied!')).catch(()=>showToast('Copy failed'));
 }
